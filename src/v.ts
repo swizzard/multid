@@ -46,7 +46,17 @@ export class V2<T> {
     }
     return neighbors;
   }
-
+  mapped<U>(f: (val: T) => U): V2<U> {
+    return new V2(this.data.map(f), this.num_rows, this.num_cols);
+  }
+  mapped_indexed<U>(f: (val: T, ix: Ix2) => U): V2<U> {
+    const ixs = this._indices;
+    const mapped: Array<U> = [];
+    for (let i = 0; i < this.data.length; i++) {
+      mapped.push(f(this.data[i], ixs[i]));
+    }
+    return new V2(mapped, this.num_rows, this.num_cols);
+  }
   push_row(row: Array<T>) {
     if (row.length !== this.num_cols) {
       throw new SizingError(this.num_cols, row.length);
@@ -65,9 +75,23 @@ export class V2<T> {
     }
     this.num_cols++;
   }
+  pretty_print() {
+    const pieces: Array<string> = [];
+    for (let i = 0; i < this.data.length; i++) {
+      if ((i + 1) % this.num_cols === 0) {
+        pieces.push(`${this.data[i]}\n`);
+      } else if (i < this.data.length) {
+        pieces.push(`${this.data[i]} `);
+      } else {
+        pieces.push(`${this.data[i]}`);
+      }
+    }
+    return pieces.join("").trim();
+  }
+
   get rows(): Array<Array<T>> {
     const rs: Array<Array<T>> = [];
-    for (let r_ix = 0; r_ix < this.num_rows; ) {
+    for (let r_ix = 0; r_ix < this.num_rows;) {
       let r: Array<T> = this.data.slice(
         r_ix * this.num_cols,
         ++r_ix * this.num_cols,
@@ -102,5 +126,14 @@ export class V2<T> {
 
   private _get_at_ix(row_ix: number, col_ix: number): T {
     return this.data[this._to_ix(row_ix, col_ix)];
+  }
+  private get _indices() {
+    const ixs: Array<Ix2> = [];
+    for (let row_ix = 0; row_ix < this.num_rows; row_ix++) {
+      for (let col_ix = 0; col_ix < this.num_cols; col_ix++) {
+        ixs.push({ row_ix, col_ix });
+      }
+    }
+    return ixs;
   }
 }

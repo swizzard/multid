@@ -1,6 +1,6 @@
 import { V2 } from "./v";
 import { VError } from "./errors";
-import { ix2 } from "./ix";
+import { ix2, Ix2 } from "./ix";
 
 const v2 = () => new V2([0, 1, 2, 3, 4, 5, 6, 7, 8], 3, 3);
 
@@ -56,6 +56,53 @@ describe("V2", () => {
       });
     });
   });
+  describe("neighbors_of", () => {
+    const V = v2();
+    it("top left corner", () => {
+      const ix = ix2({ row_ix: 0, col_ix: 0 });
+      const expected = [1, 3, 4];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+    it("center", () => {
+      const ix = ix2({ row_ix: 1, col_ix: 1 });
+      const expected = [0, 1, 2, 3, 5, 6, 7, 8];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+    it("bottom middle", () => {
+      const ix = ix2({ row_ix: 2, col_ix: 1 });
+      const expected = [3, 4, 5, 6, 8];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+    it("right middle", () => {
+      const ix = ix2({ row_ix: 1, col_ix: 2 });
+      const expected = [1, 2, 4, 7, 8];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+  });
+  describe("mapped", () => {
+    it("mapped", () => {
+      const V = v2();
+      const expected = [
+        ["0", "1", "2"],
+        ["3", "4", "5"],
+        ["6", "7", "8"],
+      ];
+      const m = V.mapped((val: number) => val.toString());
+      expect(m.rows).toEqual(expected);
+    });
+  });
+  describe("mapped_indexed", () => {
+    const V = v2();
+    const expected = [
+      ["0 0 0", "1 0 1", "2 0 2"],
+      ["3 1 0", "4 1 1", "5 1 2"],
+      ["6 2 0", "7 2 1", "8 2 2"],
+    ];
+    const m = V.mapped_indexed(
+      (val: number, { row_ix, col_ix }: Ix2) => `${val} ${row_ix} ${col_ix}`,
+    );
+    expect(m.rows).toEqual(expected);
+  });
   describe("push_row", () => {
     it("succeeds", () => {
       const V = v2();
@@ -103,28 +150,10 @@ describe("V2", () => {
       }
     });
   });
-  describe("neighbors", () => {
+  describe("pretty print", () => {
     const V = v2();
-    it("top left corner", () => {
-      const ix = ix2({ row_ix: 0, col_ix: 0 });
-      const expected = [1, 3, 4];
-      expect(V.neighbors_of(ix)).toEqual(expected);
-    });
-    it("center", () => {
-      const ix = ix2({ row_ix: 1, col_ix: 1 });
-      const expected = [0, 1, 2, 3, 5, 6, 7, 8];
-      expect(V.neighbors_of(ix)).toEqual(expected);
-    });
-    it("bottom middle", () => {
-      const ix = ix2({ row_ix: 2, col_ix: 1 });
-      const expected = [3, 4, 5, 6, 8];
-      expect(V.neighbors_of(ix)).toEqual(expected);
-    });
-    it("right middle", () => {
-      const ix = ix2({ row_ix: 1, col_ix: 2 });
-      const expected = [1, 2, 4, 7, 8];
-      expect(V.neighbors_of(ix)).toEqual(expected);
-    });
+    const expected = "0 1 2\n3 4 5\n6 7 8";
+    expect(V.pretty_print()).toEqual(expected);
   });
   describe("getters", () => {
     const V = v2();

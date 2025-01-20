@@ -37,6 +37,17 @@ class V2 {
         }
         return neighbors;
     }
+    mapped(f) {
+        return new V2(this.data.map(f), this.num_rows, this.num_cols);
+    }
+    mapped_indexed(f) {
+        const ixs = this._indices;
+        const mapped = [];
+        for (let i = 0; i < this.data.length; i++) {
+            mapped.push(f(this.data[i], ixs[i]));
+        }
+        return new V2(mapped, this.num_rows, this.num_cols);
+    }
     push_row(row) {
         if (row.length !== this.num_cols) {
             throw new errors_1.SizingError(this.num_cols, row.length);
@@ -54,6 +65,21 @@ class V2 {
             this.data.splice(ix, 0, col[row_ix]);
         }
         this.num_cols++;
+    }
+    pretty_print() {
+        const pieces = [];
+        for (let i = 0; i < this.data.length; i++) {
+            if ((i + 1) % this.num_cols === 0) {
+                pieces.push(`${this.data[i]}\n`);
+            }
+            else if (i < this.data.length) {
+                pieces.push(`${this.data[i]} `);
+            }
+            else {
+                pieces.push(`${this.data[i]}`);
+            }
+        }
+        return pieces.join("").trim();
     }
     get rows() {
         const rs = [];
@@ -87,6 +113,15 @@ class V2 {
     }
     _get_at_ix(row_ix, col_ix) {
         return this.data[this._to_ix(row_ix, col_ix)];
+    }
+    get _indices() {
+        const ixs = [];
+        for (let row_ix = 0; row_ix < this.num_rows; row_ix++) {
+            for (let col_ix = 0; col_ix < this.num_cols; col_ix++) {
+                ixs.push({ row_ix, col_ix });
+            }
+        }
+        return ixs;
     }
 }
 exports.V2 = V2;
