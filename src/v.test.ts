@@ -81,7 +81,7 @@ describe("V2", () => {
     });
   });
   describe("push_col", () => {
-    describe("success", () => {
+    it("success", () => {
       const V = v2();
       const new_col = [9, 10, 11];
       V.push_col(new_col);
@@ -101,6 +101,29 @@ describe("V2", () => {
         expect(e).toBeInstanceOf(VError);
         expect(e.message).toEqual("Size mismatch error: expected 3, got 4");
       }
+    });
+  });
+  describe("neighbors", () => {
+    const V = v2();
+    it("top left corner", () => {
+      const ix = ix2({ row_ix: 0, col_ix: 0 });
+      const expected = [1, 3, 4];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+    it("center", () => {
+      const ix = ix2({ row_ix: 1, col_ix: 1 });
+      const expected = [0, 1, 2, 3, 5, 6, 7, 8];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+    it("bottom middle", () => {
+      const ix = ix2({ row_ix: 2, col_ix: 1 });
+      const expected = [3, 4, 5, 6, 8];
+      expect(V.neighbors_of(ix)).toEqual(expected);
+    });
+    it("right middle", () => {
+      const ix = ix2({ row_ix: 1, col_ix: 2 });
+      const expected = [1, 2, 4, 7, 8];
+      expect(V.neighbors_of(ix)).toEqual(expected);
     });
   });
   describe("getters", () => {
