@@ -8,7 +8,9 @@
     "typescript": "^5.7.3"
   },
   "scripts": {
-    "test": "jest test",
+    "test": "jest --silent=false verbose=true",
     "build": "tsc -p ."
-  }
+  },
+  "main": "dist/index.js",
+  "types": "types/index.d.ts"
 }
