@@ -135,6 +135,14 @@ export class V2<T> {
     this._numCols++;
   }
 
+  mapInPlace(f: (val: T, ix: Ix2, v2: V2<T>) => T): void {
+    const ixs = this._indices;
+    const mapped: Array<T> = [];
+    for (let i = 0; i < this.data.length; i++) {
+      mapped.push(f(this.data[i], ixs[i], this));
+    }
+    this.data = mapped;
+  }
   // alias for convenience
   get cols() {
     return this.columns;
