@@ -1,6 +1,6 @@
 {
   "name": "multid",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "packageManager": "yarn@3.6.1",
   "devDependencies": {
     "@types/jest": "^29.5.14",
