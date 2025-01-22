@@ -15,15 +15,15 @@ export class SizingError extends VError {
 }
 
 export class Ix2Error extends VError {
-  constructor(field_name: string) {
-    const m = `Error constructing 2d index: ${field_name} cannot be negative`;
+  constructor(fieldName: string) {
+    const m = `Error constructing 2d index: ${fieldName} cannot be negative`;
     super(m);
   }
 }
 
 export class OutOfRangeError extends VError {
-  constructor(field_name: string) {
-    const m = `Error: ${field_name} out of range`;
+  constructor(fieldName: string) {
+    const m = `Error: ${fieldName} out of range`;
     super(m);
   }
 }

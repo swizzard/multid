@@ -3,24 +3,24 @@ import { VError } from "./errors";
 
 describe("ix2", () => {
   it("initializes correctly", () => {
-    const row_ix = 1;
-    const col_ix = 2;
-    const ix = ix2({ row_ix, col_ix });
-    expect(ix.row_ix).toBe(row_ix);
-    expect(ix.col_ix).toBe(col_ix);
+    const rowIx = 1;
+    const colIx = 2;
+    const ix = ix2({ rowIx, colIx });
+    expect(ix.rowIx).toBe(rowIx);
+    expect(ix.colIx).toBe(colIx);
   });
   it("doesn't initialize incorrectly", () => {
-    const row_ix = -1;
-    const col_ix = 2;
+    const rowIx = -1;
+    const colIx = 2;
     try {
-      const res = ix2({ row_ix, col_ix });
+      const res = ix2({ rowIx, colIx });
       if (res) {
         throw new Error("res shouldn't exist");
       }
     } catch (e: any) {
       expect(e).toBeInstanceOf(VError);
       expect(e.message).toEqual(
-        "Error constructing 2d index: row_ix cannot be negative",
+        "Error constructing 2d index: rowIx cannot be negative",
       );
     }
   });

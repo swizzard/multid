@@ -1,8 +1,8 @@
-export declare function ix2({ row_ix, col_ix, }: {
-    row_ix: number;
-    col_ix: number;
+export declare function ix2({ rowIx, colIx }: {
+    rowIx: number;
+    colIx: number;
 }): Ix2;
 export type Ix2 = {
-    row_ix: number;
-    col_ix: number;
+    rowIx: number;
+    colIx: number;
 };
