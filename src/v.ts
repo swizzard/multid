@@ -61,6 +61,13 @@ export class V2<T> {
     return new V2(mapped, this.numRows, this.numCols);
   }
 
+  forEach(f: (val: T, ix: Ix2, v2: V2<T>) => void): void {
+    const ixs = this._indices;
+    for (let i = 0; i < this.data.length; i++) {
+      f(this.data[i], ixs[i], this);
+    }
+  }
+
   prettyPrint() {
     const pieces: Array<string> = [];
     for (let i = 0; i < this.data.length; i++) {
