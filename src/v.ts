@@ -52,14 +52,11 @@ export class V2<T> {
   }
 
   // transformations
-  mapped<U>(f: (val: T) => U): V2<U> {
-    return new V2(this.data.map(f), this.numRows, this.numCols);
-  }
-  mappedIndexed<U>(f: (val: T, ix: Ix2) => U): V2<U> {
+  map<U>(f: (val: T, ix: Ix2, v2: V2<T>) => U): V2<U> {
     const ixs = this._indices;
     const mapped: Array<U> = [];
     for (let i = 0; i < this.data.length; i++) {
-      mapped.push(f(this.data[i], ixs[i]));
+      mapped.push(f(this.data[i], ixs[i], this));
     }
     return new V2(mapped, this.numRows, this.numCols);
   }

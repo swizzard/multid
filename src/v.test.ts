@@ -79,27 +79,16 @@ describe("V2", () => {
       expect(V.neighborsOf(ix)).toEqual(expected);
     });
   });
-  describe("mapped", () => {
-    it("mapped", () => {
-      const V = v2();
-      const expected = [
-        ["0", "1", "2"],
-        ["3", "4", "5"],
-        ["6", "7", "8"],
-      ];
-      const m = V.mapped((val: number) => val.toString());
-      expect(m.rows).toEqual(expected);
-    });
-  });
-  describe("mappedIndexed", () => {
+  describe("map", () => {
     const V = v2();
     const expected = [
       ["0 0 0", "1 0 1", "2 0 2"],
       ["3 1 0", "4 1 1", "5 1 2"],
       ["6 2 0", "7 2 1", "8 2 2"],
     ];
-    const m = V.mappedIndexed(
-      (val: number, { rowIx, colIx }: Ix2) => `${val} ${rowIx} ${colIx}`,
+    const m = V.map(
+      (val: number, { rowIx, colIx }: Ix2, _v: V2<number>) =>
+        `${val} ${rowIx} ${colIx}`,
     );
     expect(m.rows).toEqual(expected);
   });
