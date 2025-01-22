@@ -16,6 +16,7 @@ export declare class V2<T> {
     get columns(): Array<Array<T>>;
     pushRow(row: Array<T>): void;
     pushCol(col: Array<T>): void;
+    mapInPlace(f: (val: T, ix: Ix2, v2: V2<T>) => T): void;
     get cols(): T[][];
     private _column;
     private _toIx;
