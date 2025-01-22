@@ -48,6 +48,12 @@ class V2 {
         }
         return new V2(mapped, this.numRows, this.numCols);
     }
+    forEach(f) {
+        const ixs = this._indices;
+        for (let i = 0; i < this.data.length; i++) {
+            f(this.data[i], ixs[i], this);
+        }
+    }
     prettyPrint() {
         const pieces = [];
         for (let i = 0; i < this.data.length; i++) {
