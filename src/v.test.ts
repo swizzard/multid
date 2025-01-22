@@ -111,6 +111,33 @@ describe("V2", () => {
     });
     expect(a).toEqual(expected);
   });
+  describe("prettyPrint", () => {
+    const V = v2();
+    const expected = "0 1 2\n3 4 5\n6 7 8";
+    expect(V.prettyPrint()).toEqual(expected);
+  });
+  describe("getters", () => {
+    const V = v2();
+    it("numRows", () => expect(V.numRows).toEqual(3));
+    it("numCols", () => expect(V.numCols).toEqual(3));
+    it("length", () => expect(V.length).toEqual(9));
+    it("rows", () => {
+      const expected = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+      ];
+      expect(V.rows).toEqual(expected);
+    });
+    it("columns", () => {
+      const expected = [
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+      ];
+      expect(V.columns).toEqual(expected);
+    });
+  });
   describe("pushRow", () => {
     it("succeeds", () => {
       const V = v2();
@@ -156,30 +183,6 @@ describe("V2", () => {
         expect(e).toBeInstanceOf(VError);
         expect(e.message).toEqual("Size mismatch error: expected 3, got 4");
       }
-    });
-  });
-  describe("pretty print", () => {
-    const V = v2();
-    const expected = "0 1 2\n3 4 5\n6 7 8";
-    expect(V.prettyPrint()).toEqual(expected);
-  });
-  describe("getters", () => {
-    const V = v2();
-    it("rows", () => {
-      const expected = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-      ];
-      expect(V.rows).toEqual(expected);
-    });
-    it("columns", () => {
-      const expected = [
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-      ];
-      expect(V.columns).toEqual(expected);
     });
   });
 });
