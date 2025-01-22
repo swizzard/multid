@@ -115,6 +115,14 @@ class V2 {
         }
         this._numCols++;
     }
+    mapInPlace(f) {
+        const ixs = this._indices;
+        const mapped = [];
+        for (let i = 0; i < this.data.length; i++) {
+            mapped.push(f(this.data[i], ixs[i], this));
+        }
+        this.data = mapped;
+    }
     // alias for convenience
     get cols() {
         return this.columns;

@@ -185,4 +185,18 @@ describe("V2", () => {
       }
     });
   });
+  describe("mapInPlace", () => {
+    it("success", () => {
+      const V = v2();
+      const expectedRows = [
+        [0, 2, 4],
+        [4, 6, 8],
+        [8, 10, 12],
+      ];
+      V.mapInPlace((val, { colIx, rowIx }, _v) => {
+        return val + colIx + rowIx;
+      });
+      expect(V.rows).toEqual(expectedRows);
+    });
+  });
 });
