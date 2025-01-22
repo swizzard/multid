@@ -4,26 +4,26 @@ import { OutOfRangeError, SizingError } from "./errors";
 import { Ix2 } from "./ix";
 
 export class V2<T> {
-  private numRows: number;
-  private numCols: number;
+  private _numRows: number;
+  private _numCols: number;
   private data: Array<T>;
 
-  constructor(data: Array<T>, num_rows: number, num_cols: number) {
-    if (num_rows * num_cols !== data.length) {
-      throw new SizingError(data.length, num_rows * num_cols);
+  constructor(data: Array<T>, numRows: number, numCols: number) {
+    if (numRows * numCols !== data.length) {
+      throw new SizingError(data.length, numRows * numCols);
     }
-    this.numRows = num_rows;
-    this.numCols = num_cols;
+    this._numRows = numRows;
+    this._numCols = numCols;
     this.data = data;
   }
 
   // access by index
 
   atIx({ rowIx, colIx }: Ix2): T {
-    if (rowIx > this.numRows) {
+    if (rowIx > this._numRows) {
       throw new OutOfRangeError("rowIx");
     }
-    if (colIx > this.numCols) {
+    if (colIx > this._numCols) {
       throw new OutOfRangeError("colIx");
     }
     return this._getAtIx(rowIx, colIx);
@@ -39,8 +39,8 @@ export class V2<T> {
           !(
             mr < 0 ||
             mc < 0 ||
-            mr >= this.numRows ||
-            mc >= this.numCols ||
+            mr >= this._numRows ||
+            mc >= this._numCols ||
             (mr === rowIx && mc === colIx)
           )
         ) {
@@ -58,7 +58,7 @@ export class V2<T> {
     for (let i = 0; i < this.data.length; i++) {
       mapped.push(f(this.data[i], ixs[i], this));
     }
-    return new V2(mapped, this.numRows, this.numCols);
+    return new V2(mapped, this._numRows, this._numCols);
   }
 
   forEach(f: (val: T, ix: Ix2, v2: V2<T>) => void): void {
@@ -71,7 +71,7 @@ export class V2<T> {
   prettyPrint() {
     const pieces: Array<string> = [];
     for (let i = 0; i < this.data.length; i++) {
-      if ((i + 1) % this.numCols === 0) {
+      if ((i + 1) % this._numCols === 0) {
         pieces.push(`${this.data[i]}\n`);
       } else if (i < this.data.length) {
         pieces.push(`${this.data[i]} `);
@@ -81,13 +81,25 @@ export class V2<T> {
     }
     return pieces.join("").trim();
   }
+
   // getters
+  get numRows(): number {
+    return this._numRows;
+  }
+
+  get numCols(): number {
+    return this._numRows;
+  }
+
+  get length(): number {
+    return this.data.length;
+  }
   get rows(): Array<Array<T>> {
     const rs: Array<Array<T>> = [];
-    for (let r_ix = 0; r_ix < this.numRows; ) {
+    for (let rIx = 0; rIx < this._numRows; ) {
       let r: Array<T> = this.data.slice(
-        r_ix * this.numCols,
-        ++r_ix * this.numCols,
+        rIx * this._numCols,
+        ++rIx * this._numCols,
       );
       rs.push(r);
     }
@@ -95,47 +107,48 @@ export class V2<T> {
   }
   get columns(): Array<Array<T>> {
     const cs: Array<Array<T>> = [];
-    let c_ix = 0;
-    while (c_ix < this.numCols) {
-      cs.push(this._column(c_ix));
-      c_ix++;
+    let cIx = 0;
+    while (cIx < this._numCols) {
+      cs.push(this._column(cIx));
+      cIx++;
     }
     return cs;
+  }
+
+  // mutating functions
+  pushRow(row: Array<T>) {
+    if (row.length !== this._numCols) {
+      throw new SizingError(this._numCols, row.length);
+    }
+    this._numRows++;
+    this.data.push(...row);
+  }
+  pushCol(col: Array<T>) {
+    if (col.length !== this._numRows) {
+      throw new SizingError(this._numRows, col.length);
+    }
+    this.data.splice(this._toIx(0, this._numCols), 0, col[0]);
+    for (let rowIx = 1; rowIx < this._numRows; rowIx++) {
+      const ix = this._toIx(rowIx, this._numCols + rowIx);
+      this.data.splice(ix, 0, col[rowIx]);
+    }
+    this._numCols++;
   }
 
   // alias for convenience
   get cols() {
     return this.columns;
   }
-  // mutating functions
-  pushRow(row: Array<T>) {
-    if (row.length !== this.numCols) {
-      throw new SizingError(this.numCols, row.length);
-    }
-    this.numRows++;
-    this.data.push(...row);
-  }
-  pushCol(col: Array<T>) {
-    if (col.length !== this.numRows) {
-      throw new SizingError(this.numRows, col.length);
-    }
-    this.data.splice(this._toIx(0, this.numCols), 0, col[0]);
-    for (let rowIx = 1; rowIx < this.numRows; rowIx++) {
-      const ix = this._toIx(rowIx, this.numCols + rowIx);
-      this.data.splice(ix, 0, col[rowIx]);
-    }
-    this.numCols++;
-  }
   // private methods
   private _column(colIx: number): Array<T> {
     const c: Array<T> = [];
-    for (let r_ix = 0; r_ix < this.numRows; r_ix++) {
-      c.push(this.data[this._toIx(r_ix, colIx)]);
+    for (let rIx = 0; rIx < this._numRows; rIx++) {
+      c.push(this.data[this._toIx(rIx, colIx)]);
     }
     return c;
   }
   private _toIx(rowIx: number, colIx: number): number {
-    return rowIx * this.numCols + colIx;
+    return rowIx * this._numCols + colIx;
   }
 
   private _getAtIx(rowIx: number, colIx: number): T {
@@ -143,8 +156,8 @@ export class V2<T> {
   }
   private get _indices() {
     const ixs: Array<Ix2> = [];
-    for (let rowIx = 0; rowIx < this.numRows; rowIx++) {
-      for (let colIx = 0; colIx < this.numCols; colIx++) {
+    for (let rowIx = 0; rowIx < this._numRows; rowIx++) {
+      for (let colIx = 0; colIx < this._numCols; colIx++) {
         ixs.push({ rowIx, colIx });
       }
     }
