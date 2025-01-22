@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ix2 = ix2;
+// 2d index type
+// use the `ix2` function, don't construct the type directly
 const errors_1 = require("./errors");
-function ix2({ row_ix, col_ix, }) {
-    if (row_ix < 0) {
-        throw new errors_1.Ix2Error("row_ix");
+function ix2({ rowIx, colIx }) {
+    if (rowIx < 0) {
+        throw new errors_1.Ix2Error("rowIx");
     }
-    if (col_ix < 0) {
-        throw new errors_1.Ix2Error("col_ix");
+    if (colIx < 0) {
+        throw new errors_1.Ix2Error("colIx");
     }
-    return { row_ix, col_ix };
+    return { rowIx: rowIx, colIx };
 }

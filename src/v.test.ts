@@ -22,61 +22,61 @@ describe("V2", () => {
       }
     });
   });
-  describe("at_ix", () => {
+  describe("atIx", () => {
     const V = v2();
     describe("errors", () => {
-      it("row_ix", () => {
+      it("rowIx", () => {
         try {
-          const res = V.at_ix(ix2({ row_ix: 4, col_ix: 0 }));
+          const res = V.atIx(ix2({ rowIx: 4, colIx: 0 }));
           if (res) {
             throw new Error("res shouldn't exist");
           }
         } catch (e: any) {
           expect(e).toBeInstanceOf(VError);
-          expect(e.message).toEqual("Error: row_ix out of range");
+          expect(e.message).toEqual("Error: rowIx out of range");
         }
       });
-      it("col_ix", () => {
+      it("colIx", () => {
         try {
-          const res = V.at_ix(ix2({ row_ix: 0, col_ix: 4 }));
+          const res = V.atIx(ix2({ rowIx: 0, colIx: 4 }));
           if (res) {
             throw new Error("res shouldn't exist");
           }
         } catch (e: any) {
           expect(e).toBeInstanceOf(VError);
-          expect(e.message).toEqual("Error: col_ix out of range");
+          expect(e.message).toEqual("Error: colIx out of range");
         }
       });
     });
     describe("success", () => {
       it("succeeds", () => {
-        const ix = ix2({ row_ix: 2, col_ix: 1 });
-        const res = V.at_ix(ix);
+        const ix = ix2({ rowIx: 2, colIx: 1 });
+        const res = V.atIx(ix);
         expect(res).toEqual(7);
       });
     });
   });
-  describe("neighbors_of", () => {
+  describe("neighborsOf", () => {
     const V = v2();
     it("top left corner", () => {
-      const ix = ix2({ row_ix: 0, col_ix: 0 });
+      const ix = ix2({ rowIx: 0, colIx: 0 });
       const expected = [1, 3, 4];
-      expect(V.neighbors_of(ix)).toEqual(expected);
+      expect(V.neighborsOf(ix)).toEqual(expected);
     });
     it("center", () => {
-      const ix = ix2({ row_ix: 1, col_ix: 1 });
+      const ix = ix2({ rowIx: 1, colIx: 1 });
       const expected = [0, 1, 2, 3, 5, 6, 7, 8];
-      expect(V.neighbors_of(ix)).toEqual(expected);
+      expect(V.neighborsOf(ix)).toEqual(expected);
     });
     it("bottom middle", () => {
-      const ix = ix2({ row_ix: 2, col_ix: 1 });
+      const ix = ix2({ rowIx: 2, colIx: 1 });
       const expected = [3, 4, 5, 6, 8];
-      expect(V.neighbors_of(ix)).toEqual(expected);
+      expect(V.neighborsOf(ix)).toEqual(expected);
     });
     it("right middle", () => {
-      const ix = ix2({ row_ix: 1, col_ix: 2 });
+      const ix = ix2({ rowIx: 1, colIx: 2 });
       const expected = [1, 2, 4, 7, 8];
-      expect(V.neighbors_of(ix)).toEqual(expected);
+      expect(V.neighborsOf(ix)).toEqual(expected);
     });
   });
   describe("mapped", () => {
@@ -91,23 +91,23 @@ describe("V2", () => {
       expect(m.rows).toEqual(expected);
     });
   });
-  describe("mapped_indexed", () => {
+  describe("mappedIndexed", () => {
     const V = v2();
     const expected = [
       ["0 0 0", "1 0 1", "2 0 2"],
       ["3 1 0", "4 1 1", "5 1 2"],
       ["6 2 0", "7 2 1", "8 2 2"],
     ];
-    const m = V.mapped_indexed(
-      (val: number, { row_ix, col_ix }: Ix2) => `${val} ${row_ix} ${col_ix}`,
+    const m = V.mappedIndexed(
+      (val: number, { rowIx, colIx }: Ix2) => `${val} ${rowIx} ${colIx}`,
     );
     expect(m.rows).toEqual(expected);
   });
-  describe("push_row", () => {
+  describe("pushRow", () => {
     it("succeeds", () => {
       const V = v2();
       const new_row = [9, 10, 11];
-      V.push_row(new_row);
+      V.pushRow(new_row);
       const expected_rows = [
         [0, 1, 2],
         [3, 4, 5],
@@ -120,18 +120,18 @@ describe("V2", () => {
       const V = v2();
       const new_row = [9, 10, 11, 12];
       try {
-        V.push_row(new_row);
+        V.pushRow(new_row);
       } catch (e: any) {
         expect(e).toBeInstanceOf(VError);
         expect(e.message).toEqual("Size mismatch error: expected 3, got 4");
       }
     });
   });
-  describe("push_col", () => {
+  describe("pushCol", () => {
     it("success", () => {
       const V = v2();
       const new_col = [9, 10, 11];
-      V.push_col(new_col);
+      V.pushCol(new_col);
       const expected_rows = [
         [0, 1, 2, 9],
         [3, 4, 5, 10],
@@ -143,7 +143,7 @@ describe("V2", () => {
       const V = v2();
       const new_col = [9, 10, 11, 12];
       try {
-        V.push_col(new_col);
+        V.pushCol(new_col);
       } catch (e: any) {
         expect(e).toBeInstanceOf(VError);
         expect(e.message).toEqual("Size mismatch error: expected 3, got 4");
@@ -153,7 +153,7 @@ describe("V2", () => {
   describe("pretty print", () => {
     const V = v2();
     const expected = "0 1 2\n3 4 5\n6 7 8";
-    expect(V.pretty_print()).toEqual(expected);
+    expect(V.prettyPrint()).toEqual(expected);
   });
   describe("getters", () => {
     const V = v2();
