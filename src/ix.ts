@@ -1,4 +1,7 @@
+// 2d index type
+// use the `ix2` function, don't construct the type directly
 import { Ix2Error } from "./errors";
+
 export function ix2({
   row_ix,
   col_ix,

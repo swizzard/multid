@@ -1,3 +1,5 @@
+// 2d array class
+
 import { OutOfRangeError, SizingError } from "./errors";
 import { Ix2 } from "./ix";
 
@@ -14,6 +16,8 @@ export class V2<T> {
     this.num_cols = num_cols;
     this.data = data;
   }
+
+  // access by index
 
   at_ix({ row_ix, col_ix }: Ix2): T {
     if (row_ix > this.num_rows) {
@@ -46,6 +50,8 @@ export class V2<T> {
     }
     return neighbors;
   }
+
+  // transformations
   mapped<U>(f: (val: T) => U): V2<U> {
     return new V2(this.data.map(f), this.num_rows, this.num_cols);
   }
@@ -57,24 +63,7 @@ export class V2<T> {
     }
     return new V2(mapped, this.num_rows, this.num_cols);
   }
-  push_row(row: Array<T>) {
-    if (row.length !== this.num_cols) {
-      throw new SizingError(this.num_cols, row.length);
-    }
-    this.num_rows++;
-    this.data.push(...row);
-  }
-  push_col(col: Array<T>) {
-    if (col.length !== this.num_rows) {
-      throw new SizingError(this.num_rows, col.length);
-    }
-    this.data.splice(this._to_ix(0, this.num_cols), 0, col[0]);
-    for (let row_ix = 1; row_ix < this.num_rows; row_ix++) {
-      const ix = this._to_ix(row_ix, this.num_cols + row_ix);
-      this.data.splice(ix, 0, col[row_ix]);
-    }
-    this.num_cols++;
-  }
+
   pretty_print() {
     const pieces: Array<string> = [];
     for (let i = 0; i < this.data.length; i++) {
@@ -88,10 +77,10 @@ export class V2<T> {
     }
     return pieces.join("").trim();
   }
-
+  // getters
   get rows(): Array<Array<T>> {
     const rs: Array<Array<T>> = [];
-    for (let r_ix = 0; r_ix < this.num_rows;) {
+    for (let r_ix = 0; r_ix < this.num_rows; ) {
       let r: Array<T> = this.data.slice(
         r_ix * this.num_cols,
         ++r_ix * this.num_cols,
@@ -110,9 +99,30 @@ export class V2<T> {
     return cs;
   }
 
+  // alias for convenience
   get cols() {
     return this.columns;
   }
+  // mutating functions
+  push_row(row: Array<T>) {
+    if (row.length !== this.num_cols) {
+      throw new SizingError(this.num_cols, row.length);
+    }
+    this.num_rows++;
+    this.data.push(...row);
+  }
+  push_col(col: Array<T>) {
+    if (col.length !== this.num_rows) {
+      throw new SizingError(this.num_rows, col.length);
+    }
+    this.data.splice(this._to_ix(0, this.num_cols), 0, col[0]);
+    for (let row_ix = 1; row_ix < this.num_rows; row_ix++) {
+      const ix = this._to_ix(row_ix, this.num_cols + row_ix);
+      this.data.splice(ix, 0, col[row_ix]);
+    }
+    this.num_cols++;
+  }
+  // private methods
   private _column(col_ix: number): Array<T> {
     const c: Array<T> = [];
     for (let r_ix = 0; r_ix < this.num_rows; r_ix++) {

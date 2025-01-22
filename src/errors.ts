@@ -1,6 +1,4 @@
-export function isVError<E extends Error>(err: E): boolean {
-  return err instanceof VError;
-}
+// Custom errors
 
 export class VError extends Error {
   constructor(message: string) {
@@ -28,4 +26,7 @@ export class OutOfRangeError extends VError {
     const m = `Error: ${field_name} out of range`;
     super(m);
   }
+}
+export function isVError<E extends Error>(err: E): boolean {
+  return err instanceof VError;
 }
