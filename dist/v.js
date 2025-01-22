@@ -40,14 +40,11 @@ class V2 {
         return neighbors;
     }
     // transformations
-    mapped(f) {
-        return new V2(this.data.map(f), this.numRows, this.numCols);
-    }
-    mappedIndexed(f) {
+    map(f) {
         const ixs = this._indices;
         const mapped = [];
         for (let i = 0; i < this.data.length; i++) {
-            mapped.push(f(this.data[i], ixs[i]));
+            mapped.push(f(this.data[i], ixs[i], this));
         }
         return new V2(mapped, this.numRows, this.numCols);
     }
